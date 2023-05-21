@@ -1,5 +1,5 @@
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 // Add imports above this line
 import { galleryItems } from './gallery-items';
 // Change code below this line
@@ -9,7 +9,6 @@ console.log(galleryItems);
 const galleryContainer = document.querySelector('.gallery');
 const imagesMarkup = createImagesMarkup(galleryItems);
 galleryContainer.insertAdjacentHTML('beforeend', imagesMarkup);
-
 
 function createImagesMarkup(galleryItems) {
   const markup = galleryItems
@@ -30,8 +29,7 @@ function createImagesMarkup(galleryItems) {
   return markup;
 }
 
-var lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionPosition: 'bottom',
+const lightbox = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
+  captionsData: 'alt',
 });
