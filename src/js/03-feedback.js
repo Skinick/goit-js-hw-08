@@ -2,47 +2,41 @@ import throttle from 'lodash.throttle';
 
 const STORAGE_KEY = 'feedback-form-state';
 
-const form = document.querySelector('.feedback-form');
+const refs = {
+  form: document.querySelector('.feedback-form'),
+  email: document.querySelector('.feedback-form input'),
+  message: document.querySelector('.feedback-form textarea'),
+};
 
-form.addEventListener('submit', onFormSubmit);
+refs.form.addEventListener('input', throttle(onFormInput, 500));
 
-let formData = {};
-form.addEventListener(
-  'input',
-  throttle(event => {
-    formData[event.target.name] = event.target.value.trim();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-  }, 500)
-);
+function onFormInput() {
+  const formData = JSON.stringify({
+    email: refs.email.value,
+    message: refs.message.value,
+  });
+  localStorage.setItem(STORAGE_KEY, formData);
+}
+
+refs.form.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(event) {
   event.preventDefault();
-  const { email, message } = event.target;
-  const emailValue = email.value.trim();
-  const messageValue = message.value.trim();
-  console.log({
-    email: emailValue,
-    message: messageValue,
-  });
 
+  if (!event.target.email.value || !event.target.message.value) {
+    alert('Заповніть усі поля форми');
+    return;
+  }
+  console.log(JSON.parse(localStorage.getItem(STORAGE_KEY)));
   event.currentTarget.reset();
   localStorage.removeItem(STORAGE_KEY);
 }
+outputFromLocalStorage();
 
-const load = key => {
-  try {
-    const savedInputs = localStorage.getItem(key);
-    return savedInputs ? JSON.parse(savedInputs) : undefined;
-  } catch (error) {
-    console.error(error.message);
-  }
-};
-
-const storageData = load(STORAGE_KEY);
-if (storageData) {
-  formData = storageData;
-  const keys = Object.keys(formData);
-  for (const key of keys) {
-    form.elements[key].value = formData[key];
+function outputFromLocalStorage() {
+  const outputData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (outputData) {
+    refs.email.value = outputData.email;
+    refs.message.value = outputData.message;
   }
 }
