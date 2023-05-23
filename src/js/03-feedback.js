@@ -12,8 +12,8 @@ refs.form.addEventListener('input', throttle(onFormInput, 500));
 
 function onFormInput() {
   const formData = JSON.stringify({
-    email: refs.email.value,
-    message: refs.message.value,
+    email: refs.email.value.trim(),
+    message: refs.message.value.trim(),
   });
   localStorage.setItem(STORAGE_KEY, formData);
 }
